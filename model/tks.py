@@ -2,11 +2,12 @@ import logging
 import torch
 
 import numpy as np
+from collections import defaultdict
 
-from layers import MergeLayer, TimeEncode
-from memory import Memory, MemoryUpdater, get_memory_updater, GRUMemoryUpdater
-from embedding import get_embedding_module
-from message import get_message_aggregator, get_message_function
+from model.layers import MergeLayer, TimeEncode
+from model.memory import Memory, MemoryUpdater, get_memory_updater, GRUMemoryUpdater
+from model.embedding import get_embedding_module
+from model.message import get_message_aggregator, get_message_function
 
 class TGN(torch.nn.Module):
   def __init__(self, neighbor_finder, node_features, edge_features, device, n_layers=2,

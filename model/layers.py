@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 
 class MergeLayer(torch.nn.Module):
   def __init__(self, dim1, dim2, dim3, dim4):
@@ -18,7 +19,8 @@ class MergeLayer(torch.nn.Module):
 class TimeEncode(torch.nn.Module):
   # Time Encoding proposed by TGAT
   def __init__(self, dimension):
-    super(TimeEncode, self).__init__()
+    # Avoid issues if TimeEncode gets rebound in interactive sessions.
+    super().__init__()
 
     self.dimension = dimension
     self.w = torch.nn.Linear(1, dimension)

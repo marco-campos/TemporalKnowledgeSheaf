@@ -29,10 +29,10 @@ print ("finished loading numpy arrays")
 
 thgl_df, thgl_feat = preprocess_thgl(data)
 
-procesed_df, thgl_node_feat = reindex(thgl_df, bipartite=False)
+procesed_df, thgl_node_feat = reindex(thgl_df, bipartite=False, fp="/data/ml_thgl_software.csv")
 
 node_features, edge_features, full_data, train_data, val_data, test_data, new_node_val_data, \
-new_node_test_data = get_data(thgl_feat,thgl_node_feat, dataset_name= '/content/ml_thgl_software.csv',
+new_node_test_data = get_data(thgl_feat,thgl_node_feat, dataset_name= '/data/ml_thgl_software.csv',
                               different_new_nodes_between_val_and_test=True,
                               randomize_features=True)
 # Initialize training neighbor finder to retrieve temporal graph
@@ -61,6 +61,7 @@ device = torch.device(device_string)
 mean_time_shift_src, std_time_shift_src, mean_time_shift_dst, std_time_shift_dst = \
   compute_time_statistics(full_data.sources, full_data.destinations, full_data.timestamps)
 
+############################################################################################################
 
 tgn = TGN(neighbor_finder=train_ngh_finder, node_features=node_features,
             edge_features=edge_features, device=device,
@@ -78,6 +79,7 @@ tgn = TGN(neighbor_finder=train_ngh_finder, node_features=node_features,
             use_destination_embedding_in_message=True,
             use_source_embedding_in_message=True,
             dyrep=True)
+
 criterion = torch.nn.BCELoss()
 optimizer = torch.optim.Adam(tgn.parameters(), lr=0.0001)
 tgn = tgn.to(device)
@@ -103,6 +105,9 @@ BATCH_SIZE = 200
 torch.autograd.set_detect_anomaly(True)
 
 early_stopper = EarlyStopMonitor(max_round= 5)
+
+############################################################################################################
+
 for epoch in range(NUM_EPOCH):
   start_epoch = time.time()
     ### Training
@@ -171,9 +176,9 @@ for epoch in range(NUM_EPOCH):
     train_memory_backup = tgn.memory.backup_memory()
 
   val_ap, val_auc = eval_edge_prediction(model=tgn,
-                                                      negative_edge_sampler=val_rand_sampler,
-                                                      data=val_data,
-                                                      n_neighbors=NUM_NEIGHBORS)
+                                        negative_edge_sampler=val_rand_sampler,
+                                        data=val_data,
+                                        n_neighbors=NUM_NEIGHBORS)
   if USE_MEMORY:
       val_memory_backup = tgn.memory.backup_memory()
       # Restore memory we had at the end of training to be used when validating on new nodes.
@@ -221,7 +226,7 @@ for epoch in range(NUM_EPOCH):
 if USE_MEMORY:
   val_memory_backup = tgn.memory.backup_memory()
 
-  ### Test
+### Test
 tgn.embedding_module.neighbor_finder = full_ngh_finder
 test_ap, test_auc = eval_edge_prediction(model=tgn,
                                                               negative_edge_sampler=test_rand_sampler,

@@ -1,6 +1,7 @@
 import torch
 
 import torch.nn as nn
+import numpy as np
 
 class EmbeddingModule(nn.Module):
   def __init__(self, node_features, edge_features, memory, neighbor_finder, time_encoder, n_layers,

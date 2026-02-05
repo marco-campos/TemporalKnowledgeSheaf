@@ -73,7 +73,7 @@ def preprocess_thgl(tgb_data):
 
     return df, edge_features
 
-def reindex(df, bipartite=True):
+def reindex(df, bipartite=True, fp="ml_data.csv"):
     new_df = df.copy()
 
     # Note: thgl-software is likely NOT bipartite (package A -> package B).
@@ -99,7 +99,8 @@ def reindex(df, bipartite=True):
 
     rand_feat = np.zeros((max_idx + 1, 172))
 
-    new_df.to_csv('ml_thgl_software.csv', index=False)
+    data_fp = "../data/" + fp
+    new_df.to_csv(data_fp, index=False)
 
     print(f"Processed {len(new_df)} edges.")
     print(f"Max Node ID: {max_idx}")
