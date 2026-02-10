@@ -29,7 +29,7 @@ print ("finished loading numpy arrays")
 
 thgl_df, thgl_feat = preprocess_thgl(data)
 
-procesed_df, thgl_node_feat = reindex(thgl_df, bipartite=False, fp="/data/ml_thgl_software.csv")
+procesed_df, thgl_node_feat = reindex(thgl_df, bipartite=False)
 
 node_features, edge_features, full_data, train_data, val_data, test_data, new_node_val_data, \
 new_node_test_data = get_data(thgl_feat,thgl_node_feat, dataset_name= '/data/ml_thgl_software.csv',

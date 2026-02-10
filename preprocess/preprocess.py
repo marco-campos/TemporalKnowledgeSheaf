@@ -99,9 +99,6 @@ def reindex(df, bipartite=True, fp="ml_data.csv"):
 
     rand_feat = np.zeros((max_idx + 1, 172))
 
-    data_fp = "../data/" + fp
-    new_df.to_csv(data_fp, index=False)
-
     print(f"Processed {len(new_df)} edges.")
     print(f"Max Node ID: {max_idx}")
 
